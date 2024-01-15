@@ -1,24 +1,9 @@
 from django.contrib import admin
 
-from links.models import Factory, Retail, IE
+from links.models import Link
 
 
-@admin.register(Factory)
-class FactoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'country', 'city', 'street', 'house_number',)
-    list_filter = ('country',)
-    # readonly_fields = ('level',)
-
-
-@admin.register(Retail)
-class RetailAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'country', 'city', 'street', 'house_number',)
-    list_filter = ('country',)
-    # readonly_fields = ('level',)
-
-
-@admin.register(IE)
-class IEAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'country', 'city', 'street', 'house_number',)
-    list_filter = ('country',)
-    # readonly_fields = ('level',)
+@admin.register(Link)
+class LinkAdmin(admin.ModelAdmin):
+    list_display = ('link', 'name', 'email', 'country', 'city', 'street', 'house_number',)
+    list_filter = ('link', 'country',)
