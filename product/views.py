@@ -4,7 +4,9 @@ from product.models import Product
 
 
 class ProductListView(ListView):
-    """Контроллер списка продуктов/товаров."""
+    """
+    Контроллер списка продуктов/товаров.
+    """
 
     model = Product
     template_name = 'product/home.html'
