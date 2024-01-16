@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
 from links.models import Link
-from links.serliazers import LinkSerializer
+from links.serializers import LinkSerializer
 
 
 class LinkViewSet(viewsets.ModelViewSet):
