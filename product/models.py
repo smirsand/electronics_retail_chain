@@ -13,10 +13,11 @@ class Product(models.Model):
     product_name = models.CharField(max_length=150, verbose_name='название')
     model = models.CharField(max_length=150, verbose_name='модель')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='цена')
+    quantity = models.IntegerField(verbose_name='количество товара')
     release_date = models.DateTimeField(verbose_name='время выхода на рынок')
-    manufacturer = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY},
+    supplier = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY},
                                      related_name='manufacturer_products', on_delete=models.CASCADE,
-                                     verbose_name='производитель')
+                                     verbose_name='поставщик')
 
     hierarchy = models.IntegerField(default=0, verbose_name='иерархия')
 
