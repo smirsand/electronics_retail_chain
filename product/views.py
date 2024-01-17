@@ -1,13 +1,8 @@
-from django.views.generic import ListView
-
+from rest_framework import viewsets
 from product.models import Product
+from product.serializers import ProductSerializer
 
 
-class ProductListView(ListView):
-    """
-    Контроллер списка продуктов/товаров.
-    """
-
-    model = Product
-    template_name = 'product/home.html'
-    extra_context = {'title': 'Товары'}
+class ProductViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()

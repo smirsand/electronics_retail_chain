@@ -9,12 +9,12 @@ class Link(models.Model):
     """
 
     FACTORY = 'завод'
-    IE = 'индивидуальный предприниматель'
+    IE = 'ИП'
     RETAIL = 'розничная сеть'
 
     STATUS_CHOICES = [
         (FACTORY, "завод"),
-        (IE, "индивидуальный предприниматель"),
+        (IE, "ИП"),
         (RETAIL, "розничная сеть"),
     ]
     link = models.CharField(max_length=50, choices=STATUS_CHOICES, verbose_name='звено сети')
@@ -24,10 +24,9 @@ class Link(models.Model):
     city = models.CharField(max_length=150, verbose_name='город')
     street = models.CharField(max_length=150, verbose_name='улица')
     house_number = models.IntegerField(verbose_name='номер дома')
-    hierarchy = models.IntegerField(default=0, verbose_name='иерархия')
 
     def __str__(self):
-        return f'{self.link}, {self.email}, {self.name}'
+        return f'{self.link} {self.name}'
 
     class Meta:
         verbose_name = 'звено'
