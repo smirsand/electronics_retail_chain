@@ -34,7 +34,6 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     """
     Контроллер закупки продуктов/товаров.
     """
-
     model = Purchase
     serializer_class = PurchaseSerializer
 
@@ -43,18 +42,14 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
         product_id = self.request.data.get('product_name')
         product = Product.objects.get(id=product_id)
         hierarchy = product.hierarchy  # иерархия
-        print(obj.__dict__)
-        print(f'Иерархия - {hierarchy}')
         supplier = self.request.data.get('supplier')  # продавец/владелец
-        print(f'Продавец,владелец - {supplier}')
         buyer = self.request.data.get('buyer')  # покупатель
-        print(f'Покупатель - {buyer}')
+
         if hierarchy < 2:
             hierarchy = hierarchy + 1
         else:
             hierarchy = 2
 
-        print(f'Покупатель - {buyer}')
         # Получение всех параметров
         parameters = {
             'name': product.name,  # название
@@ -65,15 +60,9 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
             'supplier': Link(pk=supplier),  # поставщик
             'owner': Link(pk=buyer),  # владелец
             'hierarchy': hierarchy,  # иерархия
-
         }
-        print(parameters)
-        print(f'Покупатель - {buyer}')
-        print(f'Продавец,владелец - {supplier}')
 
         new_product = Product.objects.create(**parameters)
-        print(new_product.__dict__)
-
         obj.save()
 
 
