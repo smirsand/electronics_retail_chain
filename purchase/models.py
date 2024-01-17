@@ -11,10 +11,10 @@ class Purchase(models.Model):
 
     product_name = models.ForeignKey(Product, related_name='purchases_with_name', on_delete=models.CASCADE,
                                      verbose_name='наименование товара')
-    quantity = models.IntegerField(verbose_name='количество товара')
+    quantity = models.IntegerField(verbose_name='количество')
     hierarchy = models.IntegerField(default=0, verbose_name='иерархия')
-    supplier = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY, 'hierarchy': 0}, related_name='purchases_as_supplier', on_delete=models.CASCADE,
-                                 verbose_name='поставщик товара')
+    product_owner = models.ForeignKey(Link, related_name='purchases_as_supplier', on_delete=models.CASCADE,
+                                      verbose_name='владелец товара')
     buyer = models.ForeignKey(Link, related_name='purchases_as_buyer', on_delete=models.CASCADE,
                               verbose_name='покупатель товара')
     data = models.DateTimeField(verbose_name='дата создания')
