@@ -14,10 +14,13 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):  # Увеличение иерархии +1. Иерархия максимум увеличивается до 3.
         obj = serializer.save()
         hierarchy = self.request.data.get('hierarchy')
-        if obj.hierarchy <= 2:
+        product_owner = self.request.data.get('product_owner')
+        buyer = self.request.data.get('buyer')
+        buyer = product_owner
+        if obj.hierarchy <= 1:
             obj.hierarchy = hierarchy + 1
         else:
-            obj.hierarchy = 3
+            obj.hierarchy = 2
 
         obj.save()
 
