@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'links',
     'product',
     'purchase',
+    'debt',
     'users',
 ]
 
