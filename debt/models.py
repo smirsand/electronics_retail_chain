@@ -8,7 +8,8 @@ class Debt(models.Model):
     Модель задолженности.
     """
     duty = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='долг')
-    borrower = models.ForeignKey(Link, on_delete=models.CASCADE, related_name='borrowed_debt_set', verbose_name='заемщик')
+    borrower = models.ForeignKey(Link, on_delete=models.CASCADE, related_name='borrowed_debt_set',
+                                 verbose_name='заемщик')
     debtor = models.ForeignKey(Link, on_delete=models.CASCADE, related_name='owed_debt_set', verbose_name='должник')
 
     def __str__(self):
