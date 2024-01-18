@@ -8,6 +8,4 @@ app_name = ProductConfig.name
 router = DefaultRouter()
 router.register(r'product', ProductViewSet, basename='product')
 
-urlpatterns = [
-
-              ] + router.urls
+urlpatterns = [] + router.urls
