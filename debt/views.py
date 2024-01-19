@@ -11,3 +11,20 @@ class DebtListAPIView(generics.ListAPIView):
 
     serializer_class = DebtSerializer
     queryset = Debt.objects.all()
+
+
+class DebtRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Контроллер просмотра задолженности.
+    """
+
+    serializer_class = DebtSerializer
+    queryset = Debt.objects.all()
+
+
+class DebtDestroyAPIView(generics.DestroyAPIView):
+    """
+    Контроллер удаления задолженности.
+    """
+
+    queryset = Debt.objects.all()
