@@ -4,6 +4,9 @@ from links.models import Link
 
 
 class LinkSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор модели Link.
+    """
 
     class Meta:
         model = Link
