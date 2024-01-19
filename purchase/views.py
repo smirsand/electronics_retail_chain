@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics
 
 from debt.models import Debt
+from debt.permissions import IsNotSuperuser
 from links.models import Link
 from product.models import Product
 from purchase.models import Purchase
@@ -15,9 +16,10 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     """
     model = Purchase
     serializer_class = PurchaseSerializer
+    permission_classes = [IsNotSuperuser]
 
     def perform_create(self, serializer):
-        print(serializer)
+
         product_id = self.request.data.get('product_name')  # получение id продукта
         total_quantity = self.request.data.get('quantity')  # количество закупаемого товара
         product = get_object_or_404(Product, id=product_id)  # получение параметров продукта по id
@@ -27,8 +29,7 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
 
         supplier = self.request.data.get('supplier')  # продавец/владелец
         buyer = self.request.data.get('buyer')  # покупатель
-        print(buyer)
-        print(supplier)
+
         if quantity_to_purchase >= total_quantity:
             remaining_quantity = quantity_to_purchase - total_quantity
             product.quantity = remaining_quantity
@@ -91,3 +92,4 @@ class PurchaseDestroyAPIView(generics.DestroyAPIView):
     """
 
     queryset = Purchase.objects.all()
+    permission_classes = [IsNotSuperuser]

@@ -7,4 +7,4 @@ from debt.models import Debt
 class DebtAdmin(admin.ModelAdmin):
     list_display = ('id', 'product_id', 'product', 'borrower', 'debtor', 'duty',)
     list_filter = ('borrower', 'debtor', 'duty',)
-    readonly_fields = ('product_id', 'product', 'borrower', 'debtor', 'duty',)
+    # readonly_fields = ('product_id', 'product', 'borrower', 'debtor', 'duty',)
