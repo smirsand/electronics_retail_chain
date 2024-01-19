@@ -74,3 +74,20 @@ class PurchaseListAPIView(generics.ListAPIView):
     """
     serializer_class = PurchaseSerializer
     queryset = Purchase.objects.all()
+
+
+class PurchaseRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Контроллер просмотра закупки.
+    """
+
+    serializer_class = PurchaseSerializer
+    queryset = Purchase.objects.all()
+
+
+class PurchaseDestroyAPIView(generics.DestroyAPIView):
+    """
+    Контроллер удаления закупки.
+    """
+
+    queryset = Purchase.objects.all()
