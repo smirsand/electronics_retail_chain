@@ -5,5 +5,5 @@ from links.models import Link
 
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
-    list_display = ('link', 'name', 'email', 'country', 'city', 'street', 'house_number',)
+    list_display = ('id', 'link', 'name', 'email', 'country', 'city', 'street', 'house_number',)
     list_filter = ('link', 'country',)
