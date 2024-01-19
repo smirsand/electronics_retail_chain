@@ -17,6 +17,7 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     serializer_class = PurchaseSerializer
 
     def perform_create(self, serializer):
+        print(serializer)
         product_id = self.request.data.get('product_name')  # получение id продукта
         total_quantity = self.request.data.get('quantity')  # количество закупаемого товара
         product = get_object_or_404(Product, id=product_id)  # получение параметров продукта по id
@@ -43,7 +44,8 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
             data = {
                 'duty': debt,
                 'borrower': Link(pk=supplier),
-                'debtor': Link(pk=buyer)
+                'debtor': Link(pk=buyer),
+                'product': product_id
             }
 
             Debt.objects.create(**data).save()  # запись задолженности в БД

@@ -5,7 +5,7 @@ from links.views import LinkViewSet
 
 app_name = LinksConfig.name
 
-router = DefaultRouter()
+router = DefaultRouter()  # маршрутизатор по умолчанию
 router.register(r'link', LinkViewSet, basename='link')
 
 urlpatterns = [] + router.urls
