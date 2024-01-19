@@ -5,6 +5,6 @@ from debt.models import Debt
 
 @admin.register(Debt)
 class DebtAdmin(admin.ModelAdmin):
-    list_display = ('product_id', 'product', 'borrower', 'debtor', 'duty',)
+    list_display = ('id', 'product_id', 'product', 'borrower', 'debtor', 'duty',)
     list_filter = ('borrower', 'debtor', 'duty',)
     readonly_fields = ('product_id', 'product', 'borrower', 'debtor', 'duty',)
