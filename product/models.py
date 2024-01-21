@@ -19,9 +19,16 @@ class Product(models.Model):
                                  related_name='manufacturer_products', on_delete=models.CASCADE,
                                  verbose_name='поставщик')
     owner_link = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY}, on_delete=models.CASCADE,
-                                   verbose_name='владелец')
-
+                                   verbose_name='владелец продукта')
+    city = models.CharField(max_length=150, **NULLABLE, verbose_name='город')
+    country = models.CharField(max_length=150, **NULLABLE, verbose_name='страна')
     hierarchy = models.IntegerField(default=0, verbose_name='иерархия')
+
+    def save(self, *args, **kwargs):
+        if not self.city:
+            self.city = self.owner_link.city
+            self.country = self.owner_link.country
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} {self.model}"

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django_bootstrap5",
     'rest_framework_simplejwt',
     'rest_framework',
+    'django_filters',
 
     'links',
     'product',

@@ -6,4 +6,4 @@ from purchase.models import Purchase
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'quantity', 'supplier', 'buyer', 'data', 'owner',)
-    list_filter = ('product_name',)
+    list_filter = ('product_name', 'supplier', 'buyer',)
