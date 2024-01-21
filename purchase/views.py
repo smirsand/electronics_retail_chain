@@ -23,13 +23,16 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
 
         product_id = self.request.data.get('product_name')  # получение id продукта
+        supplier = self.request.data.get('supplier')  # продавец/владелец
+        buyer = self.request.data.get('buyer')  # покупатель
+        link_instance = Link.objects.get(pk=buyer)
+        city = link_instance.city  # город
+        country = link_instance.country  # страна
         total_quantity = self.request.data.get('quantity')  # количество закупаемого товара
-        product = get_object_or_404(Product, id=product_id)  # получение параметров продукта по id
+        product = get_object_or_404(Product, id=product_id, supplier=supplier)
         hierarchy = product.hierarchy  # иерархия
         price = product.price  # цена товара
         quantity_to_purchase = product.quantity  # общее количество товара у поставщика
-        supplier = self.request.data.get('supplier')  # продавец/владелец
-        buyer = self.request.data.get('buyer')  # покупатель
 
         if quantity_to_purchase >= total_quantity:
             remaining_quantity = quantity_to_purchase - total_quantity
@@ -50,7 +53,6 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
                 'product': product,
                 'owner': self.request.user  # экземпляр модели User
             }
-            print(data)
 
             Debt.objects.create(**data)
 
@@ -63,6 +65,8 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
                 'supplier': Link(pk=supplier),  # поставщик
                 'owner_link': Link(pk=buyer),  # владелец
                 'hierarchy': hierarchy,  # иерархия
+                'city': city,  # город
+                'country': country
             }
 
             Product.objects.create(**parameters)  # запись в БД закупки товара
