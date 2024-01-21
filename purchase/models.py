@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.db import models
 
-from links.models import Link
+from links.models import Link, NULLABLE
 from product.models import Product
 
 
@@ -17,6 +18,9 @@ class Purchase(models.Model):
     buyer = models.ForeignKey(Link, related_name='purchases_as_buyer', on_delete=models.CASCADE,
                               verbose_name='покупатель')
     data = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='пользователь',
+                              **NULLABLE)
 
     def __str__(self):
         return f"{self.product_name}"

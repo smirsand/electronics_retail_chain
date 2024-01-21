@@ -13,13 +13,12 @@ class DebtListAPIView(generics.ListAPIView):
     serializer_class = DebtSerializer
     queryset = Debt.objects.all()
 
-    # def get_queryset(self):
-    #     # получаем базовый набор объектов из родительского класса.
-    #     queryset = super().get_queryset()
-    #     print(queryset)
-    #     # фильтруем объекты, оставляя те, которые принадлежат текущему пользователю.
-    #     # queryset = queryset.filter(user=self.request.user)
-    #     return queryset
+    def get_queryset(self):
+        # получаем базовый набор объектов из родительского класса.
+        queryset = super().get_queryset()
+        # фильтруем объекты, оставляя те, которые принадлежат текущему пользователю.
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset
 
 
 class DebtRetrieveAPIView(generics.RetrieveAPIView):

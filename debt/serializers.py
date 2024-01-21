@@ -8,4 +8,3 @@ class DebtSerializer(serializers.ModelSerializer):
     class Meta:
         model = Debt
         fields = '__all__'
-        read_only_fields = ['debt']
