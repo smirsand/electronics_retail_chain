@@ -1,6 +1,7 @@
 from rest_framework import generics
 
 from debt.models import Debt
+from debt.paginators import DebtPagination
 from debt.permissions import IsNotSuperuser
 from debt.serializers import DebtSerializer
 
@@ -12,6 +13,7 @@ class DebtListAPIView(generics.ListAPIView):
 
     serializer_class = DebtSerializer
     queryset = Debt.objects.all()
+    pagination_class = DebtPagination
 
     def get_queryset(self):
         # получаем базовый набор объектов из родительского класса.
