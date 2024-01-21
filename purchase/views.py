@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 from debt.models import Debt
 from debt.permissions import IsNotSuperuser
@@ -16,7 +17,8 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     """
     model = Purchase
     serializer_class = PurchaseSerializer
-    permission_classes = [IsNotSuperuser]
+    queryset = Purchase.objects.all()
+    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
 
@@ -26,7 +28,6 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
         hierarchy = product.hierarchy  # иерархия
         price = product.price  # цена товара
         quantity_to_purchase = product.quantity  # общее количество товара у поставщика
-
         supplier = self.request.data.get('supplier')  # продавец/владелец
         buyer = self.request.data.get('buyer')  # покупатель
 
@@ -46,10 +47,12 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
                 'duty': debt,
                 'borrower': Link(pk=supplier),
                 'debtor': Link(pk=buyer),
-                'product': product_id
+                'product': product,
+                'owner': self.request.user  # экземпляр модели User
             }
+            print(data)
 
-            Debt.objects.create(**data).save()  # запись задолженности в БД
+            Debt.objects.create(**data)
 
             parameters = {
                 'name': product.name,  # название
@@ -58,12 +61,13 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
                 'quantity': total_quantity,  # количество
                 'release_date': product.release_date,  # дата выхода на рынок
                 'supplier': Link(pk=supplier),  # поставщик
-                'owner': Link(pk=buyer),  # владелец
+                'owner_link': Link(pk=buyer),  # владелец
                 'hierarchy': hierarchy,  # иерархия
             }
 
             Product.objects.create(**parameters)  # запись в БД закупки товара
-            serializer.save()
+            owner = self.request.user
+            serializer.save(owner=owner)
         else:
             message = {'error': 'Выберите меньшее количество!'}
             return JsonResponse(message, status=400)
@@ -75,6 +79,13 @@ class PurchaseListAPIView(generics.ListAPIView):
     """
     serializer_class = PurchaseSerializer
     queryset = Purchase.objects.all()
+
+    def get_queryset(self):
+        # получаем базовый набор объектов из родительского класса.
+        queryset = super().get_queryset()
+        # фильтруем объекты, оставляя те, которые принадлежат текущему пользователю.
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset
 
 
 class PurchaseRetrieveAPIView(generics.RetrieveAPIView):
