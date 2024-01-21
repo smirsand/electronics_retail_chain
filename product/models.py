@@ -18,8 +18,8 @@ class Product(models.Model):
     supplier = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY},
                                  related_name='manufacturer_products', on_delete=models.CASCADE,
                                  verbose_name='поставщик')
-    owner = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY}, on_delete=models.CASCADE,
-                              verbose_name='владелец')
+    owner_link = models.ForeignKey(Link, limit_choices_to={'link': Link.FACTORY}, on_delete=models.CASCADE,
+                                   verbose_name='владелец')
 
     hierarchy = models.IntegerField(default=0, verbose_name='иерархия')
 
