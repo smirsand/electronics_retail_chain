@@ -8,6 +8,7 @@ from debt.permissions import IsNotSuperuser
 from links.models import Link
 from product.models import Product
 from purchase.models import Purchase
+from purchase.paginators import PurchasePagination
 from purchase.serializers import PurchaseSerializer
 
 
@@ -17,7 +18,6 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     """
     model = Purchase
     serializer_class = PurchaseSerializer
-    queryset = Purchase.objects.all()
 
     def perform_create(self, serializer):
 
@@ -28,52 +28,56 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
         city = link_instance.city  # город
         country = link_instance.country  # страна
         total_quantity = self.request.data.get('quantity')  # количество закупаемого товара
-        product = get_object_or_404(Product, id=product_id, supplier=supplier)
-        hierarchy = product.hierarchy  # иерархия
-        price = product.price  # цена товара
-        quantity_to_purchase = product.quantity  # общее количество товара у поставщика
+        product = get_object_or_404(Product, id=product_id, owner_link=supplier)
 
-        if quantity_to_purchase >= total_quantity:
-            remaining_quantity = quantity_to_purchase - total_quantity
-            product.quantity = remaining_quantity
-            product.save()
+        if product:
+            hierarchy = product.hierarchy  # иерархия
+            price = product.price  # цена товара
+            quantity_to_purchase = product.quantity  # общее количество товара у поставщика
 
-            if hierarchy < 2:
-                hierarchy = hierarchy + 1
+            if quantity_to_purchase >= total_quantity:
+                remaining_quantity = quantity_to_purchase - total_quantity
+                product.quantity = remaining_quantity
+                product.save()
+
+                if hierarchy < 2:
+                    hierarchy = hierarchy + 1
+                else:
+                    hierarchy = 2
+
+                debt = total_quantity * price  # сумма покупки
+
+                data = {
+                    'duty': debt,
+                    'borrower': Link(pk=supplier),
+                    'debtor': Link(pk=buyer),
+                    'product': product,
+                    'owner': self.request.user  # экземпляр модели User
+                }
+
+                Debt.objects.create(**data)
+
+                parameters = {
+                    'name': product.name,  # название
+                    'model': product.model,  # модель
+                    'price': product.price,  # цена
+                    'quantity': total_quantity,  # количество
+                    'release_date': product.release_date,  # дата выхода на рынок
+                    'supplier': Link(pk=supplier),  # поставщик
+                    'owner_link': Link(pk=buyer),  # владелец
+                    'hierarchy': hierarchy,  # иерархия
+                    'city': city,  # город
+                    'country': country
+                }
+
+                Product.objects.create(**parameters)  # запись в БД закупки товара
+                owner = self.request.user
+                serializer.save(owner=owner)
             else:
-                hierarchy = 2
+                return JsonResponse({'error': 'Недостаточно товара на складе'}, status=400)
 
-            debt = total_quantity * price  # сумма покупки
-
-            data = {
-                'duty': debt,
-                'borrower': Link(pk=supplier),
-                'debtor': Link(pk=buyer),
-                'product': product,
-                'owner': self.request.user  # экземпляр модели User
-            }
-
-            Debt.objects.create(**data)
-
-            parameters = {
-                'name': product.name,  # название
-                'model': product.model,  # модель
-                'price': product.price,  # цена
-                'quantity': total_quantity,  # количество
-                'release_date': product.release_date,  # дата выхода на рынок
-                'supplier': Link(pk=supplier),  # поставщик
-                'owner_link': Link(pk=buyer),  # владелец
-                'hierarchy': hierarchy,  # иерархия
-                'city': city,  # город
-                'country': country
-            }
-
-            Product.objects.create(**parameters)  # запись в БД закупки товара
-            owner = self.request.user
-            serializer.save(owner=owner)
         else:
-            message = {'error': 'Выберите меньшее количество!'}
-            return JsonResponse(message, status=400)
+            return JsonResponse({'error': 'Продукт не найден'}, status=404)
 
 
 class PurchaseListAPIView(generics.ListAPIView):
@@ -82,6 +86,7 @@ class PurchaseListAPIView(generics.ListAPIView):
     """
     serializer_class = PurchaseSerializer
     queryset = Purchase.objects.all()
+    pagination_class = PurchasePagination
 
     def get_queryset(self):
         # получаем базовый набор объектов из родительского класса.
