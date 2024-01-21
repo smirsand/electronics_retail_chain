@@ -18,7 +18,6 @@ class PurchaseCreateAPIView(generics.CreateAPIView):
     model = Purchase
     serializer_class = PurchaseSerializer
     queryset = Purchase.objects.all()
-    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
 
