@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-from links.models import Link, NULLABLE
+from links.models import Link
 from product.models import Product
 
 
