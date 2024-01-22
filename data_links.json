@@ -1,0 +1,41 @@
+[
+  {
+    "model": "links.link",
+    "pk": 1,
+    "fields": {
+      "link": "завод",
+      "email": "test_1@mail.ru",
+      "name": "Звезда",
+      "country": "Россия",
+      "city": "Тверь",
+      "street": "Мира",
+      "house_number": 9
+    }
+  },
+  {
+    "model": "links.link",
+    "pk": 2,
+    "fields": {
+      "link": "ИП",
+      "email": "test_2@mail.ru",
+      "name": "ИП Иванов",
+      "country": "Белоруссия",
+      "city": "Самара",
+      "street": "Центральная",
+      "house_number": 3
+    }
+  },
+  {
+    "model": "links.link",
+    "pk": 3,
+    "fields": {
+      "link": "розничная сеть",
+      "email": "test_3@mail.ru",
+      "name": "Розница",
+      "country": "Россия",
+      "city": "Москва",
+      "street": "Тверская",
+      "house_number": 5
+    }
+  }
+]
